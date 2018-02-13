@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  app:
+    build: ./docker/app
+    command: ["npm", "start"]
+    networks: 
+      - backend
+    volumes:
+      - ./:/usr/src/app
+    links:
+      - database
+    networks:
+      - backend
+
+  database:
+    image: mongo
+    volumes:
+      - mongodb:/data/db
+    ports:
+      - 27017:27017
+    networks: 
+      - backend
+
+volumes:
+  mongodb:
+
+networks:
+  backend: {}
