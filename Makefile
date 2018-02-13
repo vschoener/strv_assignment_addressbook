@@ -18,6 +18,9 @@ install:
 
 app-build: install
 	docker-compose run --rm app npm run build
+	
+test:
+	docker-compose run --rm app npm test
 
 logs:
 	docker-compose logs -f

@@ -1,3 +1,5 @@
+[![pipeline status](https://gitlab.com/vschoener/addressbook/badges/master/pipeline.svg)](https://gitlab.com/vschoener/addressbook/commits/master) [![coverage report](https://gitlab.com/vschoener/addressbook/badges/master/coverage.svg)](https://gitlab.com/vschoener/addressbook/commits/master)
+
 # Address Book Service
 
 It's a service exposing a REST API that allows to manage a address book

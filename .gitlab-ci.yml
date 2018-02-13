@@ -1,0 +1,28 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay
+  TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  script:
+    - docker build -t $TEST_IMAGE .
+    - docker push $TEST_IMAGE
+  
+test:
+  stage: test
+  script:
+    - docker pull $TEST_IMAGE
+    - docker run $TEST_IMAGE npm test
