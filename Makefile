@@ -1,5 +1,5 @@
 
-all: down build install app-build start
+all: down build install start
 
 build:
 	docker-compose build
@@ -10,14 +10,8 @@ start:
 down:
 	docker-compose down
 
-prod:
-	docker-compose -f docker-compose.yml up
-
 install:
-	docker-compose run --rm app npm install
-
-app-build: install
-	docker-compose run --rm app npm run build
+	docker-compose run --rm app npm install && npm run build
 	
 test:
 	docker-compose run --rm app npm test

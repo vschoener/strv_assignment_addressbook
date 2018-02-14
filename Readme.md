@@ -2,7 +2,7 @@
 
 # Address Book Service
 
-It's a service exposing a REST API that allows to manage a address book
+It's a service exposing a REST API that allows to manage an address book
 
 ## Pre Requirement
 
@@ -29,9 +29,6 @@ make build
 # Install app
 make install
 
-# Build app (Maybe we could set this one in install?)
-make app-build
-
 # Run container
 make start
 
@@ -50,7 +47,7 @@ npm run build
 npm start
 ```
 
-If you want, you also watch file during the development:
+If you want, you also can watch file during the development:
 ```bash
 npm run watch
 ```
