@@ -4,25 +4,46 @@ services:
   - docker:dind
 
 variables:
-  DOCKER_DRIVER: overlay
+  DOCKER_DRIVER: overlay2
   TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
-
-before_script:
-  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+  RELEASE_HEROKU_IMAGE: registry.heroku.com/addressbook-strv-test/app:latest
 
 stages:
   - build
   - test
+  - staging
 
 build:
   stage: build
   script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t $TEST_IMAGE .
     - docker push $TEST_IMAGE
   
 test:
+  variables:
+    GIT_STRATEGY: none  
   stage: test
   script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker pull $TEST_IMAGE
     - docker run $TEST_IMAGE npm test
+    - docker tag $TEST_IMAGE $RELEASE_IMAGE
+    - docker push $RELEASE_IMAGE
+
+deploy-staging:
+  variables:
+    GIT_STRATEGY: none  
+  stage: staging
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker pull $RELEASE_IMAGE
+    - docker login --username=_ --password=$HEROKU_AUTH_TOKEN registry.heroku.com
+    - docker tag $RELEASE_IMAGE $RELEASE_HEROKU_IMAGE
+    - docker push $RELEASE_HEROKU_IMAGE
+  only:
+    - staging
+
+# Later we could add the deploy-production following the deploy-staging logic with only: master
+    
