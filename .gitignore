@@ -1,8 +1,12 @@
 # Dependency directory
 /node_modules
 
+# Coverage test
+/coverage
+
 # Ignore ts built files
 /dist
+/.env
 
 # Docker
 /docker-compose.override.yml

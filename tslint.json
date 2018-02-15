@@ -17,7 +17,7 @@
         "no-var-keyword": true,
         "quotemark": [
             true,
-            "double",
+            "simple",
             "avoid-escape"
         ],
         "semicolon": [
