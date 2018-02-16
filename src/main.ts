@@ -1,3 +1,3 @@
 import app from "./bootstrap";
 
-app.run();
+app.run().catch(err => console.log(err));

@@ -4,7 +4,7 @@ services:
   app:
     build: .
     command: ["npm", "start"]
-    networks: 
+    networks:
       - backend
     volumes:
       - ./:/usr/src/app
@@ -19,7 +19,7 @@ services:
       - mongodb:/data/db
     ports:
       - 27017:27017
-    networks: 
+    networks:
       - backend
 
 volumes:

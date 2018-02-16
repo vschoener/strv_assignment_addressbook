@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 
 import { App } from "./app";
 import Server from "./server";
+import Mongo from "./database/mongo";
 
 const envFile = __dirname + "/../.env";
 if (fs.existsSync(envFile)) {
@@ -12,7 +13,8 @@ if (fs.existsSync(envFile)) {
 const app = new App(
     process.env.ENV || "dev",
     process.env.PORT || "8080",
-    new Server()
+    new Server(),
+    new Mongo(process.env.MONGODB_URI)
 );
 app.initialize();
 
