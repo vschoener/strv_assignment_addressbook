@@ -20,10 +20,10 @@ build:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t $TEST_IMAGE .
     - docker push $TEST_IMAGE
-  
+
 test:
   variables:
-    GIT_STRATEGY: none  
+    GIT_STRATEGY: none
   stage: test
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
@@ -34,7 +34,7 @@ test:
 
 deploy-staging:
   variables:
-    GIT_STRATEGY: none  
+    GIT_STRATEGY: none
   stage: staging
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
@@ -46,4 +46,3 @@ deploy-staging:
     - staging
 
 # Later we could add the deploy-production following the deploy-staging logic with only: master
-    

@@ -10,8 +10,8 @@ if (fs.existsSync(envFile)) {
 }
 
 const app = new App(
-    process.env.NODE_ENV || "dev",
-    process.env.NODE_PORT || "80",
+    process.env.ENV || "dev",
+    process.env.PORT || "8080",
     new Server()
 );
 app.initialize();

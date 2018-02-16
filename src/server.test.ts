@@ -9,10 +9,8 @@ describe("Test 404", () => {
         return  request(appExpress).get("/42")
             .expect("Content-Type", /json/)
             .expect(404)
-            .expect({
-                error: {
-                    message : "Resource not found"
-                }
+            .expect((res: request.Response) => {
+                expect(res.body.error.message).to.be.equal("Resource not found");
             })
             .end((err, res) => {
                 if (err) {
