@@ -1,11 +1,8 @@
 import * as mongoose from "mongoose";
-import * as bluebird from "bluebird";
-
-// Fix to avoid Typescript error...
-(<any>mongoose).Promise = bluebird;
+/// <reference path="promise-bluebird.d.ts" />
 
 export default class Mongo {
-    private connection: mongoose.Connection;
+    connection: mongoose.Connection;
 
     constructor(private uri: string) {
         this.connection = mongoose.connection;
@@ -14,14 +11,14 @@ export default class Mongo {
     /**
      * Connect to database
      */
-    async connect(): Promise<any> {
-        this.connection.on("connected", () => {
+    async connect() {
+        return mongoose.connect(this.uri).then(() => {
+            this.connection = mongoose.connection;
             console.log("Connected to MongoDB server");
+        }).catch(err => {
+            console.error("MongoDB error:", err);
+            process.exit(1);
         });
-
-        const connect = await mongoose.connect(this.uri);
-
-        return connect;
     }
 
     disconnect() {

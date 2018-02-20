@@ -12,7 +12,7 @@ down:
 
 install:
 	docker-compose run --rm app npm install && npm run build
-	
+
 test:
 	docker-compose run --rm app npm test
 
@@ -26,4 +26,4 @@ db-logs:
 	docker-compose logs -f database
 
 watch:
-	docker-compose run --rm app npm run watch
+	docker-compose run --rm --service-ports app npm run watch

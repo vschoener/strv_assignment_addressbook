@@ -32,14 +32,11 @@ export class App {
     /**
      * This method runs our server
      */
-    async run(): Promise<any> {
+    run() {
+        const mongo = this.mongo.connect();
         this.server.runServer((port: string, env: string) => {
             console.log(`API server running on port ${port} in the "${env}" environment`);
         });
-
-        const mongo = await this.mongo.connect();
-
-        return mongo;
     }
 
     getAppExpress(): express.Application {
