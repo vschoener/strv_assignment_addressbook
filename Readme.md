@@ -61,10 +61,28 @@ npm run watch
 
 ## Test
 
+This command's gonna start 2 containers (mongo db server and the app test)
 ```bash
 make test
 ```
 
+Things to improve:
+------------------
+- Use mongo db memory to speed up the test and not having a mongo server
+- Mocking / stub on Firebase and other methods
+
 ## Deploy
 
-Coming soon
+Actually the deployment is only handle for staging. If a PR is made for
+the staging branch, GITLAB CI will automatically merge it on staging if:
+- The build is right
+- The test are OK
+
+It use a docker image from the Dockerfile of the project.
+
+Things we can improve:
+----------------------
+- Add a production stage for GITLAB CI with manual validation from staging code.
+- Add a tag to deploy docker image from version and having the possibility to rollback
+- Add a new build stage in the Dockerfile to have 'app', 'build', 'test'
+- Use the Docker image in the GitlabCI test stage. I tried a few times to used it instead using the repository and manual npm test command.
