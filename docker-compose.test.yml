@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  app_test:
+      container_name: ${CONTAINER_NAME}.app_test
+      build: .
+      command: ["npm", "test"]
+      volumes:
+        - ./src:/usr/src/app/src
+        - ./package.json:/usr/src/app/package.json
+        - ./.env_test:/usr/src/app/.env
+        - ./tslint.json:/usr/src/app/tslint.json
+        - ./logs:/usr/src/app/logs
+      networks:
+        - addressbook-backend-test
+      environment:
+        - NODE_ENV=test
+      depends_on:
+        - mongodb_test
+
+  mongodb_test:
+    container_name: ${CONTAINER_NAME}.mongodb_test
+    image: mongo
+    volumes:
+      - mongodb:/data/db
+    networks:
+      - addressbook-backend-test
+    expose:
+      - 27017
+
+#  firebase_test:
+#    container_name: ${CONTAINER_NAME}.firebase_test
+#    build: ./docker/firebase
+#    volumes:
+#      - ./docker/firebase/server.js:/app/server.js
+#    networks:
+#      - addressbook-backend-test
+#    environment:
+#      - FIREBASE_TEST_URL=${FIREBASE_TEST_URL}
+#      - FIREBASE_TEST_PORT=${FIREBASE_TEST_PORT}
+
+volumes:
+  mongodb:
+
+networks:
+  addressbook-backend-test:

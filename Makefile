@@ -1,5 +1,7 @@
+# Build, recreate and start
+all: start
 
-all: down build install start
+up: start
 
 build:
 	docker-compose build
@@ -10,11 +12,11 @@ start:
 down:
 	docker-compose down
 
+stop:
+	docker-compose stop
+
 install:
 	docker-compose run --rm app npm install && npm run build
-
-test:
-	docker-compose run --rm app npm test
 
 logs:
 	docker-compose logs -f
@@ -27,3 +29,6 @@ db-logs:
 
 watch:
 	docker-compose run --rm --service-ports app npm run watch
+
+test:
+	docker-compose -f docker-compose.test.yml run --rm app_test

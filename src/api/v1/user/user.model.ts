@@ -1,7 +1,7 @@
-import { Schema, Model, model, Document, DocumentQuery } from "mongoose";
-import * as _ from "lodash";
+import { Schema, Model, model, Document } from 'mongoose';
+import * as _ from 'lodash';
 
-import * as validator from "validator";
+import * as validator from 'validator';
 
 export interface IUserDocument extends Document {
     email: any;
@@ -40,9 +40,9 @@ export const UserSchema: Schema = new Schema({
 UserSchema.methods.toJSON = function() {
     const obj = this.toObject();
     return _.pick(obj, [
-        "_id",
-        "email"
+        '_id',
+        'email'
     ]);
 };
 
-export const User: Model<IUserDocument> = model<IUserDocument>("User", UserSchema);
+export const User: Model<IUserDocument> = model<IUserDocument>('User', UserSchema);

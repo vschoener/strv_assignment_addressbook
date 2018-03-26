@@ -15,15 +15,21 @@ Also, you can do it without docker using Node.JS and NPM locally.
 
 ### Docker
 
-Build and run all in once:
+Build and run the services:
 ```bash
-# To build image, install and build the app and run the services
+# To build and start the containers
 make 
+```
+
+Then run this command to install:
+```bash
+# Install app
+make install
 ```
 
 Separate commands:
 ```bash
-# Build the container image
+# Only Build the container image
 make build
 
 # Install app
@@ -32,7 +38,8 @@ make install
 # Run container
 make start
 
-# Stop container
+# Stops containers and removes containers, networks, volumes, and
+# images created by up
 make down
 
 # Watch files
@@ -47,14 +54,16 @@ npm run build
 npm start
 ```
 
-If you want, you also can watch file during the development:
+Watch and rebuild asset file during the development:
 ```bash
 npm run watch
 ```
 
 ## Test
 
-Coming soon
+```bash
+make test
+```
 
 ## Deploy
 

@@ -1,8 +1,10 @@
-import * as mongoose from "mongoose";
+import * as mongoose from 'mongoose';
+import { Logger } from '../logger/logger';
 /// <reference path="promise-bluebird.d.ts" />
 
-export default class Mongo {
+export class Mongo {
     connection: mongoose.Connection;
+    logger: Logger;
 
     constructor(private uri: string) {
         this.connection = mongoose.connection;
@@ -11,12 +13,12 @@ export default class Mongo {
     /**
      * Connect to database
      */
-    async connect() {
+    connect() {
         return mongoose.connect(this.uri).then(() => {
             this.connection = mongoose.connection;
-            console.log("Connected to MongoDB server");
+            this.logger.debug('Connected to MongoDB server');
         }).catch(err => {
-            console.error("MongoDB error:", err);
+            this.logger.error(`MongoDB error: ${err}`);
             process.exit(1);
         });
     }

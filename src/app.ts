@@ -1,53 +1,50 @@
-import * as express from "express";
-import { Server as httpServer } from "http";
+import * as express from 'express';
 
-import Server from "./server";
-import appRouter from "./api";
-import Mongo from "./database/mongo";
+import { Context } from './context';
+import { IServer } from './server';
+import { IRequest } from './http/request';
+import routes from './api';
+import { Mongo } from './database/mongo';
+import { Logger } from './logger/logger';
 
-export class App {
-    private appExpress: express.Application;
+import morgan = require('morgan');
+
+// Export an App Interface
+export interface IApp {
+    initialize(): IApp;
+    run(): void;
+}
+
+// Main App
+export class App implements IApp {
+    logger: Logger;
 
     constructor(
-        private env: string,
-        private port: string,
-        private server: Server,
-        private mongo: Mongo) {}
+        private context: Context,
+        private server: IServer,
+        private database: Mongo
+    ) {}
 
-    /**
-     * This method builds our logic application server
-     */
-    async initialize(): Promise<any> {
-        this.appExpress = express();
-        this.appExpress.set("env", this.env);
-        this.appExpress.set("port", this.port);
-        this.server
-            .useExpressApp(this.appExpress)
-            .attachMiddleWares()
-            .attachRouter(appRouter)
-            .attachErrorHandler()
-        ;
-    }
+    initialize(): IApp {
+        this.server.initialize();
 
-    /**
-     * This method runs our server
-     */
-    run() {
-        const mongo = this.mongo.connect();
-        this.server.runServer((port: string, env: string) => {
-            console.log(`API server running on port ${port} in the "${env}" environment`);
+        this.server.getApp().use((req: IRequest, res: express.Response, next: any) => {
+            req.context = this.context;
+            next();
         });
+
+        this.server.getApp().use(routes);
+        this.server.getApp().use(morgan('tiny', { stream: this.logger.logger.stream }));
+        this.server.useErrorsHandler();
+
+        return this;
     }
 
-    getAppExpress(): express.Application {
-        return this.appExpress;
-    }
 
-    getHttpServer(): httpServer {
-        return this.server.getHttpServer();
-    }
-
-    getMongo(): Mongo {
-        return this.mongo;
+    // Run the app
+    run(): void {
+        this.database.connect().then(() => {
+            this.server.start();
+        });
     }
 }
