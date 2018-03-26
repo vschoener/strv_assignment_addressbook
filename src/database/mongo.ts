@@ -2,11 +2,19 @@ import * as mongoose from 'mongoose';
 import { Logger } from '../logger/logger';
 /// <reference path="promise-bluebird.d.ts" />
 
+export interface MongoCredential {
+    user: string;
+    pass: string;
+    host: string;
+    port: string;
+    database: string;
+}
+
 export class Mongo {
     connection: mongoose.Connection;
     logger: Logger;
 
-    constructor(private uri: string) {
+    constructor(private credential: MongoCredential) {
         this.connection = mongoose.connection;
     }
 
@@ -14,7 +22,7 @@ export class Mongo {
      * Connect to database
      */
     connect() {
-        return mongoose.connect(this.uri).then(() => {
+        return mongoose.connect(this.buildURI()).then(() => {
             this.connection = mongoose.connection;
             this.logger.debug('Connected to MongoDB server');
         }).catch(err => {
@@ -32,5 +40,17 @@ export class Mongo {
      */
     getMongoConnectionState(): number {
         return this.connection.readyState;
+    }
+
+    private buildURI(): string {
+        let uri = 'mongodb://';
+
+        if (this.credential.user) {
+            uri += `${this.credential.user}:${this.credential.pass}@`;
+        }
+
+        uri += `${this.credential.host}:${this.credential.port}/${this.credential.database}`;
+
+        return uri;
     }
 }

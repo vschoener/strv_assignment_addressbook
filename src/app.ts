@@ -1,4 +1,5 @@
 import * as express from 'express';
+import * as morgan from 'morgan';
 
 import { Context } from './context';
 import { IServer } from './server';
@@ -7,15 +8,12 @@ import routes from './api';
 import { Mongo } from './database/mongo';
 import { Logger } from './logger/logger';
 
-import morgan = require('morgan');
-
 // Export an App Interface
 export interface IApp {
     initialize(): IApp;
     run(): void;
 }
 
-// Main App
 export class App implements IApp {
     logger: Logger;
 
@@ -34,17 +32,16 @@ export class App implements IApp {
         });
 
         this.server.getApp().use(routes);
-        this.server.getApp().use(morgan('tiny', { stream: this.logger.logger.stream }));
+        this.server.getApp().use(morgan('combined'));
         this.server.useErrorsHandler();
 
         return this;
     }
 
-
     // Run the app
-    run(): void {
-        this.database.connect().then(() => {
-            this.server.start();
-        });
+    async run() {
+        await this.database.connect();
+        this.context.firebase.initialize();
+        this.server.start();
     }
 }

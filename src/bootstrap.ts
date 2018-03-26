@@ -6,7 +6,7 @@ import { App } from './app';
 import { Server } from './server';
 import { Mongo } from './database/mongo';
 import { Context } from './context';
-import { FirebaseFactory } from './firebase/firebase.factory';
+import { Firebase } from './firebase/firebase';
 import { Logger } from './logger/logger';
 
 global.Promise = bluebird;
@@ -25,15 +25,24 @@ const logger = new Logger(__dirname + '/../logs', `app_${context.getEnv()}.log`,
 logger.initialize();
 
 const expressApp: express.Application = express();
-const firebase = FirebaseFactory.getInstance(context.getEnv());
-firebase.initialize();
+const firebase = new Firebase(
+    process.env.FIREBASE_SERVICE_ACCOUNT || process.env.FIREBASE_SERVICE_ACCOUNT_FILE,
+    process.env.FIREBASE_URL
+);
 context.firebase = firebase;
-const mongo = new Mongo(`mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DATABASE}`);
+
+const mongo = new Mongo({
+    user: process.env.MONGO_USER,
+    pass: process.env.MONGO_PASS,
+    host: process.env.MONGO_HOST,
+    port: process.env.MONGO_PORT,
+    database: process.env.MONGO_DATABASE,
+});
 mongo.logger = logger;
 
 const server: Server = new Server(
     expressApp,
-    process.env.SERVER_PORT || '80',
+    process.env.PORT || '80',
     context
 );
 server.logger = logger;
@@ -46,4 +55,4 @@ const app = new App(
 app.logger = logger;
 app.initialize();
 
-export { app, expressApp, mongo };
+export { app, expressApp, mongo, logger };

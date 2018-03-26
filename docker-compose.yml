@@ -3,17 +3,17 @@ version: '3'
 services:
   app:
       container_name: ${CONTAINER_NAME}.app
-      build: .
+      image: node
+      working_dir: /app
       command: ["npm", "start"]
       volumes:
-        - .:/usr/src/app
+        - .:/app
       networks:
         - addressbook-backend
       environment:
         - NODE_ENV=${NODE_ENV}
       ports:
-        - ${SERVER_PORT}:${SERVER_PORT}
-      restart: always
+        - ${PORT}:${PORT}
       depends_on:
         - mongodb
 
@@ -26,7 +26,6 @@ services:
       - ${MONGO_PORT}:27017
     networks:
       - addressbook-backend
-    restart: always
 
 volumes:
   mongodb:

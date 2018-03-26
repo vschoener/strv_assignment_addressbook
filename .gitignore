@@ -11,3 +11,4 @@
 # Docker
 /docker-compose.override.yml
 /firebase.json
+/logs

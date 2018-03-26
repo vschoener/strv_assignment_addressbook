@@ -1,14 +1,16 @@
-image: docker:latest
-
 variables:
   # I let some unused variable because I tried to use them with the image built during build stage
-  MONGODB_URI: "mongodb://mongo:27017/AddressBook"
+  MONGO_HOST: mongo
+  MONGO_PORT: 27017
+  MONGO_DATABASE: AddressBook
   JWT_SECRET: "MY_SECRET_HASH"
   DOCKER_DRIVER: overlay2
   TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
-  RELEASE_HEROKU_IMAGE: registry.heroku.com/addressbook-strv-test/app:latest
-  LOCAL_IMAGE: release.tar
+  RELEASE_HEROKU_IMAGE: registry.heroku.com/addressbook-strv-test/web
+
+services:
+  - docker:dind
 
 stages:
   - build
@@ -16,15 +18,14 @@ stages:
   - staging
 
 build:
-  services:
-    - docker:dind
+  image: docker:latest
   stage: build
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build --cache-from $RELEASE_IMAGE -t $RELEASE_IMAGE .
     - docker push $RELEASE_IMAGE
 
-# I would prefered using my last docker built but there is no way to get connected
+# I would preferred using my last docker built but didn't find a way connect
 # to the mongo server (or we need to use a tricks list this: https://gitlab.com/gitlab-org/gitlab-runner/issues/2691)
 test:
   stage: test
@@ -36,8 +37,7 @@ test:
     - npm test
 
 deploy-staging:
-  services:
-    - docker:dind
+  image: docker:latest
   variables:
     GIT_STRATEGY: none
   stage: staging

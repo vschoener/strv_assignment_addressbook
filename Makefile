@@ -6,6 +6,9 @@ up: start
 build:
 	docker-compose build
 
+build-ts:
+	docker-compose run --rm app npm run build:ts
+
 start:
 	docker-compose up -d
 
@@ -14,6 +17,7 @@ down:
 
 stop:
 	docker-compose stop
+	docker-compose -f docker-compose.test.yml stop
 
 install:
 	docker-compose run --rm app npm install && npm run build

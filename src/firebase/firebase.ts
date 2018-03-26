@@ -4,7 +4,7 @@ import * as firebaseAdmin from 'firebase-admin';
 
 import { FirebaseInterface } from './firebaseInterface';
 
-export default class Firebase implements FirebaseInterface {
+export class Firebase implements FirebaseInterface {
     private ref: firebase.database.Reference;
 
     /**
@@ -20,9 +20,8 @@ export default class Firebase implements FirebaseInterface {
      */
     initialize(): firebase.database.Reference {
         if (!fs.existsSync(this.serviceAccount)) {
-            process.exit(1);
+            this.serviceAccount = JSON.parse(this.serviceAccount);
         }
-
         firebaseAdmin.initializeApp({
             credential: firebaseAdmin.credential.cert(this.serviceAccount),
             databaseURL: this.url

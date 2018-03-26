@@ -26,18 +26,11 @@ export class Logger {
                 new winston.transports.Console({
                     level: 'debug',
                     handleExceptions: true,
-                    json: false,
+                    json: true,
                     colorize: true
                 })
             ]
         });
-
-        // TS error but work, I know wjy but didn't find how to fix it.."is not assignable to type"
-        logger.stream = {
-            write: function(options?: any): ReadableStream {
-                return logger.info(options);
-            }
-        };
 
         this.logger = logger;
     }

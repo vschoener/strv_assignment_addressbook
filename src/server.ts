@@ -56,7 +56,7 @@ export class Server implements IServer {
         return this;
     }
 
-    useErrorsHandler(): void {
+    useErrorsHandler(): IServer {
         this.app.use((req: express.Request, res: express.Response, next: any) => {
             const error = new Error('Resource not found');
             res.status(404);
@@ -102,7 +102,6 @@ export class Server implements IServer {
             if (this.logger) {
                 this.logger.info(message);
             }
-            console.log(`[${this.context.getEnv()}] ${message}`);
         });
     }
 }
