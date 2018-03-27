@@ -69,7 +69,6 @@ make test
 Things to improve:
 ------------------
 - Use mongo db memory to speed up the test and not having a mongo server
-- Mocking / stub on Firebase and other methods
 
 ## Deploy
 

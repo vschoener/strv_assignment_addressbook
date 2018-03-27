@@ -5,7 +5,7 @@ import * as firebaseAdmin from 'firebase-admin';
 import { FirebaseInterface } from './firebaseInterface';
 
 export class Firebase implements FirebaseInterface {
-    private ref: firebase.database.Reference;
+    private database: firebaseAdmin.database.Database;
 
     /**
      * Constructor
@@ -18,26 +18,27 @@ export class Firebase implements FirebaseInterface {
      * Initialize connection
      * @returns {firebase.database.Reference}
      */
-    initialize(): firebase.database.Reference {
-        if (!fs.existsSync(this.serviceAccount)) {
+    initialize(): void {
+        if (!fs.existsSync(this.serviceAccount) && this.serviceAccount) {
             this.serviceAccount = JSON.parse(this.serviceAccount);
         }
-        firebaseAdmin.initializeApp({
+        firebaseAdmin.initializeApp(this.getConfig());
+        firebaseAdmin.auth();
+        this.database = firebaseAdmin.database();
+    }
+
+    getConfig(): Object {
+        return {
             credential: firebaseAdmin.credential.cert(this.serviceAccount),
             databaseURL: this.url
-        });
-        firebaseAdmin.auth();
-        firebaseAdmin.database.enableLogging(true);
-        this.ref = firebaseAdmin.database().ref('AddressBooks');
-
-        return this.ref;
+        };
     }
 
     /**
      * Get ref
      * @returns {firebase.database.Reference}
      */
-    getRef(): firebase.database.Reference {
-        return this.ref;
+    getDatabase(): firebaseAdmin.database.Database {
+        return this.database;
     }
 }

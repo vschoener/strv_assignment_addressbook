@@ -1,4 +1,4 @@
-import { mongo, expressApp } from '../bootstrap';
+import { mongo, expressApp, firebase } from '../bootstrap';
 
 import { MongooseTest } from './mongo.test';
 import { ServerTest } from './server.test';
@@ -19,9 +19,4 @@ MongooseTest(expressApp);
 ServerTest(expressApp);
 HomeTest(expressApp);
 AuthTest(expressApp);
-
-// Didn't find a good way to test firebase with mock
-// Never mock this kind of service before and even on Node :(
-// So I would like to know if it because of my implementation (to hard to test it ?)
-// Or something else ? :)
-//ContactTest(expressApp);
+ContactTest(expressApp, firebase);

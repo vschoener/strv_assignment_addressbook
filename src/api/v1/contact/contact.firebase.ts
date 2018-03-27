@@ -3,10 +3,11 @@ import { IContact } from './contact.model';
 import { FirebaseInterface } from '../../../firebase/firebaseInterface';
 
 export default class FirebaseContact {
+    static ref = '/AddressBooks';
     private refContact: firebase.database.Reference;
 
     constructor(private firebase: FirebaseInterface) {
-        this.refContact = firebase.getRef().child('contacts');
+        this.refContact = firebase.getDatabase().ref(FirebaseContact.ref);
     }
 
     async addNewToUser(user: IUserDocument, contact: IContact) {

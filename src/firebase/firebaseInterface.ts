@@ -1,6 +1,6 @@
-import * as firebase from 'firebase';
+import * as firebaseAdmin from 'firebase-admin';
 
 export interface FirebaseInterface {
-    initialize(): firebase.database.Reference;
-    getRef(): firebase.database.Reference;
+    initialize(): void;
+    getDatabase(): firebaseAdmin.database.Database;
 }
