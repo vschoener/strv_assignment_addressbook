@@ -3,7 +3,6 @@ import * as bluebird from 'bluebird';
 import * as express from 'express';
 
 import { App } from './app';
-import { Server } from './server';
 import { Mongo } from './database/mongo';
 import { Context } from './context';
 import { Firebase } from './firebase/firebase';
@@ -20,9 +19,16 @@ if (process.env.JWT_SECRET === undefined) {
 
 const context = new Context(process.env.NODE_ENV || 'dev', process.env.JWT_SECRET);
 
-// @TODO: Log to a file that rotates daily if we don't use an external logger service (we should)
-const logger = new Logger(__dirname + '/../logs', `app_${context.getEnv()}.log`, context);
-logger.initialize();
+// @TODO: Log to a file that rotates daily if we don't use an external logger service
+const logger = new Logger();
+logger.initialize({
+    fileDirectory: __dirname + '/../logs',
+    fileName: `app_${context.getEnv()}.log`,
+    logLevel: process.env.LOG_LEVEL,
+    colorize: Boolean(process.env.LOG_COLORIZE),
+    jsonFormat: Boolean(process.env.LOG_JSON_FORMAT),
+    handleException: Boolean(process.env.LOG_EXCEPTION)
+});
 
 const expressApp: express.Application = express();
 const firebase = new Firebase(
@@ -40,19 +46,14 @@ const mongo = new Mongo({
 });
 mongo.logger = logger;
 
-const server: Server = new Server(
+const app = new App(
     expressApp,
     process.env.PORT || '80',
-    context
-);
-server.logger = logger;
-
-const app = new App(
     context,
-    server,
-    mongo
+    mongo,
+    logger
 );
-app.logger = logger;
 app.initialize();
 
-export { app, expressApp, mongo, logger };
+// Mongo, will start only during the app:run
+export { app, expressApp, mongo, logger, firebase };

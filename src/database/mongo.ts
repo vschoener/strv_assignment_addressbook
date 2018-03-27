@@ -24,7 +24,7 @@ export class Mongo {
     connect() {
         return mongoose.connect(this.buildURI()).then(() => {
             this.connection = mongoose.connection;
-            this.logger.debug('Connected to MongoDB server');
+            this.logger.info('Connected to MongoDB server');
         }).catch(err => {
             this.logger.error(`MongoDB error: ${err}`);
             process.exit(1);

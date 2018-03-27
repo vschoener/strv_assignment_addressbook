@@ -1,33 +1,36 @@
 import * as winston from 'winston';
 import * as fs from 'fs';
 
-import { Context } from '../context';
+export interface LoggerSettingsInterface {
+    fileDirectory: string;
+    fileName: string;
+    logLevel: string;
+    jsonFormat: boolean;
+    handleException: boolean;
+    colorize: boolean;
+}
 
 export class Logger {
     logger: winston.LoggerInstance;
 
-    constructor(private path: string, private file: string, private context: Context) {}
-
-    initialize() {
-        if (!fs.existsSync(this.path)) {
-            fs.mkdirSync(this.path);
+    initialize(settings: LoggerSettingsInterface) {
+        if (!fs.existsSync(settings.fileDirectory)) {
+            fs.mkdirSync(settings.fileDirectory);
         }
 
-        const tsFormat = () => (new Date()).toLocaleTimeString();
+        const tsFormat = () => (new Date()).toISOString();
         const logger = new (winston.Logger)({
-            exitOnError: false,
-            level: 'debug',
+            level: settings.logLevel,
             transports: [
                 new (winston.transports.File)({
-                    filename:  this.file,
-                    dirname: this.path,
+                    filename:  settings.fileName,
+                    dirname: settings.fileDirectory,
                     timestamp: tsFormat
                 }),
                 new winston.transports.Console({
-                    level: 'debug',
-                    handleExceptions: true,
-                    json: true,
-                    colorize: true
+                    handleExceptions: settings.handleException,
+                    json: settings.jsonFormat,
+                    colorize: settings.colorize
                 })
             ]
         });

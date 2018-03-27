@@ -21,7 +21,7 @@ router.post('/login', (req: IRequest, res: Response, next) => {
 });
 
 router.post('/register', (req: IRequest, res: Response, next: any) => {
-    const userService = new AuthService(req.context.getJWTSecret());
+    const authService = new AuthService(req.context.getJWTSecret());
     const infoUser = _.pick(req.body, ['email', 'password']);
 
     if (infoUser.email == undefined || infoUser.password == undefined) {
@@ -30,7 +30,7 @@ router.post('/register', (req: IRequest, res: Response, next: any) => {
         });
         return ;
     }
-    userService.registerUser(infoUser.email, infoUser.password)
+    authService.registerUser(infoUser.email, infoUser.password)
         .then((result) => {
             res.header('x-auth', result.token);
             res.status(201).json(result.user.toJSON());

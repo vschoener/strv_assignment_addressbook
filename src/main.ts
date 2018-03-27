@@ -1,3 +1,5 @@
-import { app } from './bootstrap';
+import { app, logger } from './bootstrap';
 
-app.run();
+app.run().catch(err => {
+    logger.error(err);
+});
