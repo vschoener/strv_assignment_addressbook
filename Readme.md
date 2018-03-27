@@ -15,6 +15,9 @@ Also, you can do it without docker using Node.JS and NPM locally.
 
 ### Docker
 
+Copy/paste the the `.env.docker` file to `.env` You can customize it a little, but mostly
+everythings is set for Docker usage.
+
 Build and run the services:
 ```bash
 # To build and start the containers
@@ -47,6 +50,13 @@ make watch
 ```
 
 ### Locally with Node.JS and NPM
+
+Copy and paste the `.env.sample` as `.env` and setup the information as
+- Mongo
+- Log
+- Env type
+- Express port
+
 And use those following commands
 ```bash
 npm install
