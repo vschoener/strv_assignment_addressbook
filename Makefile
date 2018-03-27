@@ -34,5 +34,8 @@ db-logs:
 watch:
 	docker-compose run --rm --service-ports app npm run watch
 
+build-test:
+	docker-compose -f docker-compose.test.yml build
+
 test:
-	docker-compose -f docker-compose.test.yml run --rm app_test
+	docker-compose -f docker-compose.test.yml up --abort-on-container-exit

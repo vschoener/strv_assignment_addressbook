@@ -1,12 +1,17 @@
-FROM node as builder
-WORKDIR /build
+FROM node:alpine as installer
+WORKDIR /install
 COPY package.json .
 COPY package-lock.json .
 RUN npm install
-COPY . .
+
+FROM node:alpine as builder
+WORKDIR /build
+COPY --from=installer /install .
+COPY ./src src
+COPY tsconfig.json .
 RUN npm run build
 
-FROM node
+FROM node:alpine
 WORKDIR /app
 COPY package.json .
 RUN npm install --production

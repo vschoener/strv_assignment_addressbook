@@ -83,5 +83,5 @@ Things we can improve:
 ----------------------
 - Add a production stage for GITLAB CI with manual validation from staging code.
 - Add a tag to deploy docker image from version and having the possibility to rollback
-- Add a new build stage in the Dockerfile to have 'app', 'build', 'test'
+- Add a new build stage in the Dockerfile to have 'test'
 - Use the Docker image in the GitlabCI test stage. I tried a few times to used it instead using the repository and manual npm test command.

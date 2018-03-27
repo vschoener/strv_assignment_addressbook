@@ -1,28 +1,29 @@
-version: '3'
+version: '3.5'
 
 services:
   app_test:
       container_name: ${CONTAINER_NAME}.app_test
-      build: .
+      build:
+        context: .
+        target: installer
       command: ["npm", "test"]
       volumes:
-        - ./src:/usr/src/app/src
-        - ./package.json:/usr/src/app/package.json
-        - ./.env_test:/usr/src/app/.env
-        - ./tslint.json:/usr/src/app/tslint.json
-        - ./logs:/usr/src/app/logs
+        - ./src:/install/src
+        - ./.env_test:/install/.env
+        - ./tsconfig.json:/install/tsconfig.json
       networks:
         - addressbook-backend-test
       environment:
         - NODE_ENV=test
       depends_on:
         - mongodb_test
+      tty: true
 
   mongodb_test:
     container_name: ${CONTAINER_NAME}.mongodb_test
     image: mongo
     volumes:
-      - mongodb:/data/db
+      - mongodbTest:/data/db
     networks:
       - addressbook-backend-test
     expose:
@@ -40,7 +41,7 @@ services:
 #      - FIREBASE_TEST_PORT=${FIREBASE_TEST_PORT}
 
 volumes:
-  mongodb:
+  mongodbTest:
 
 networks:
   addressbook-backend-test:
