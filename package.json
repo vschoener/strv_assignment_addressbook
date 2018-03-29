@@ -67,6 +67,7 @@
     "validator": "^9.4.1"
   },
   "jest": {
+    "testEnvironment": "node",
     "verbose": true,
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
@@ -76,7 +77,7 @@
       "/lib/",
       "/dist/"
     ],
-    "testRegex": "(/tests/index.ts)$",
+    "testRegex": "(/test/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
       "ts",
       "tsx",

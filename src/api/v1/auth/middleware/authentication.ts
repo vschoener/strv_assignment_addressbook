@@ -1,14 +1,14 @@
 import { Response } from 'express';
 
 import { IRequest } from '../../../../http/request';
-import AuthService from '../auth.service';
+import { AuthService } from '../auth.service';
 import { JsonWebTokenError } from 'jsonwebtoken';
 
 
 // TODO: Maybe use passport instead of custom middleware
 export default function authentication(req: IRequest, res: Response, next: any) {
     const token = req.header('X-AUTH');
-    const authService = new AuthService(req.context.getJWTSecret());
+    const authService = new AuthService(req.context.getJWTSecret(), req.context.jwtExpire);
 
     authService.decodeUserFromToken(token)
         .then(user => {
@@ -23,7 +23,7 @@ export default function authentication(req: IRequest, res: Response, next: any) 
         }).catch((e: JsonWebTokenError) => {
             if (e.name == 'TokenExpiredError') {
                 return res.status(422).json({
-                    message: 'Your token has expired. Please login again to get a fresh one!'
+                    message: 'Your token has expired. Please sign in again to get a new one!'
                   });
             }
             next(e);

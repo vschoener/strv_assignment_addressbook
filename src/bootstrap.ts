@@ -18,6 +18,7 @@ if (process.env.JWT_SECRET === undefined) {
 }
 
 const context = new Context(process.env.NODE_ENV || 'dev', process.env.JWT_SECRET);
+context.jwtExpire = parseInt(process.env.JWT_EXPIRE) || 3600;
 
 // @TODO: Log to a file that rotates daily if we don't use an external logger service
 const logger = new Logger();

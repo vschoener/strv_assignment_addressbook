@@ -33,6 +33,14 @@ export const UserSchema: Schema = new Schema({
         token: {
             type: String,
             required: true
+        },
+        expire: {
+            type: Number,
+            required: true
+        },
+        date: {
+            type: Object,
+            required: true,
         }
     }]
 });

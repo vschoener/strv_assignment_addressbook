@@ -1,12 +1,10 @@
-import * as mongoose from 'mongoose';
 import { expect } from 'chai';
-import * as express from 'express';
 
+import { mongo } from '../bootstrap';
 
-export const MongooseTest = (expressApp: express.Application) => {
-    describe('Test Database connection', function () {
-        it('should be connected', () => {
-            expect(mongoose.connection.readyState).to.be.equal(1);
-        });
+describe('Test Database connection', function () {
+    it('should be connected', async () => {
+        await mongo.connect();
+        expect(mongo.connection.readyState).to.be.equal(1);
     });
-}
+});

@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose';
 import { Logger } from '../logger/logger';
+import Bluebird = require('bluebird');
 /// <reference path="promise-bluebird.d.ts" />
 
 export interface MongoCredential {
@@ -32,7 +33,8 @@ export class Mongo {
     }
 
     disconnect() {
-        this.connection.close();
+        this.connection = undefined;
+        return this.connection.close();
     }
 
     /**

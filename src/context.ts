@@ -2,6 +2,7 @@ import { FirebaseInterface } from './firebase/firebaseInterface';
 
 export class Context {
     public firebase: FirebaseInterface;
+    public jwtExpire: number;
 
     constructor(private env: string, private jwtSecret: string) {}
 

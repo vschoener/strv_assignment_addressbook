@@ -11,6 +11,8 @@ services:
         - ./src:/install/src
         - ./.env_test:/install/.env
         - ./tsconfig.json:/install/tsconfig.json
+        - ./package.json:/install/package.json
+        - ./logs:/install/logs
       networks:
         - addressbook-backend-test
       environment:
